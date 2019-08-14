@@ -1,7 +1,20 @@
 from tkinter import *
+from dataclasses import dataclass
+
+@dataclass
+class Branch:
+    up: bool
+    down: bool
+    left: bool
+    right: bool
 
 root = Tk()
 root.geometry("800x500") #window size  
+root.title('Ai Project')
+
+label = Label(root, text='Gomoku game in python', height=4)
+label.pack()
+
 frame = Frame(root) #adding a frame
 frame.pack() 
 
@@ -15,9 +28,78 @@ btn_text = [[ '', '' ,'', '', '', '', '', '', '','' ],
             [ '', '' ,'', '', '', '', '', '', '','' ],
             [ '', '' ,'', '', '', '', '', '', '','' ],
             [ '', '' ,'', '', '', '', '', '', '','' ]]
+
+btn_list = []
+
+
 click_counter = -1
 
 
+
+
+
+def get_branch(i,j):
+    branch = Branch(False,False,False,False)
+    if((j-4) >= 0): branch.left = True
+    if((j+4) <= 9): branch.right = True
+    if((i-4) >= 0): branch.up = True
+    if((i+4) <= 9): branch.down = True
+    return branch
+
+
+
+def check_match(i,j):
+    branch = get_branch(i,j)
+    ch = btn_text[i][j]
+    
+    print('i: ',i,' j: ', j)
+    print('left: ', branch.left)
+    print('right: ',branch.right)
+    print('up: ',branch.up)
+    print('down: ',branch.down)
+
+    print('ch:     ' ,ch)
+
+
+    if(branch.left == True):
+        is_matched = True
+        for x in range(0, 5):
+            if(btn_text[i][j-x] != ch):
+                is_matched = False
+        
+        if(is_matched):
+            print('five in a row in left!')
+    
+             
+    if(branch.right == True):
+        is_matched = True
+        for x in range(0, 5):
+            if(btn_text[i][j+x] != ch):
+                is_matched = False
+        
+        if(is_matched):
+            print('five in a row in left!')
+            
+    if(branch.up == True):
+        is_matched = True
+        for x in range(0, 5):
+            if(btn_text[i-x][j] != ch):
+                is_matched = False
+        
+        if(is_matched):
+            print('five in a row in up!')
+                
+                
+    if(branch.down == True):
+        is_matched = True
+        for x in range(0, 5):
+            if(btn_text[i+x][j] != ch):
+                is_matched = False
+        
+        if(is_matched):                
+            print('five in a row in down!')
+                                    
+                
 
 def get_counter():
     global click_counter
@@ -30,9 +112,12 @@ def get_counter():
 
 
 def update_btn_text(index):
-    print(click_counter)
+    
+    '''print(click_counter)'''
+    
     i = int(index[0])
     j = int(index[1])
+    
     if(btn_text[i][j] == ''):
         ch = ''
         if(get_counter() == 0):
@@ -41,12 +126,31 @@ def update_btn_text(index):
             ch = 'o'
 
         btn_text[i][j] = ch
-        print(i,"   ",j,"  ",btn_text[i][j])
+        '''print(i,"   ",j,"  ",btn_text[i][j])'''
+        
+        check_match(i,j)
+
         return ch
     else:
         return btn_text[i][j]
 
-#print(btn_text[0])
+
+
+
+def reset_all():
+    print('reset function is callled!')
+   
+    for i in range(0,100):
+        btn_list[i].config(text='')
+
+    for i in range(0,10):
+        for j in range(0,10):
+            btn_text[i][j] = ''
+
+
+
+
+
 
 button00 = Button(frame, fg = 'red',command = lambda: button00.config(text=update_btn_text('00')))
 button01 = Button(frame, fg = 'red',command = lambda: button01.config(text=update_btn_text('01')))
@@ -63,8 +167,8 @@ button10 = Button(frame, fg = 'red',command = lambda: button10.config(text=updat
 button11 = Button(frame, fg = 'red',command = lambda: button11.config(text=update_btn_text('11')))
 button12 = Button(frame, fg = 'red',command = lambda: button12.config(text=update_btn_text('12')))
 button13 = Button(frame, fg = 'red',command = lambda: button13.config(text=update_btn_text('13')))
-button14 = Button(frame, fg = 'red',command = lambda: button14 .config(text=update_btn_text('14')))
-button15 = Button(frame, fg = 'red',command = lambda: button15 .config(text=update_btn_text('15')))
+button14 = Button(frame, fg = 'red',command = lambda: button14.config(text=update_btn_text('14')))
+button15 = Button(frame, fg = 'red',command = lambda: button15.config(text=update_btn_text('15')))
 button16 = Button(frame, fg = 'red',command = lambda: button16.config(text=update_btn_text('16')))
 button17 = Button(frame, fg = 'red',command = lambda: button17.config(text=update_btn_text('17')))
 button18 = Button(frame, fg = 'red',command = lambda: button18.config(text=update_btn_text('18')))
@@ -158,23 +262,10 @@ button97 = Button(frame, fg = 'red',command = lambda: button97.config(text=updat
 button98 = Button(frame, fg = 'red',command = lambda: button98.config(text=update_btn_text('98')))
 button99 = Button(frame, fg = 'red',command = lambda: button99.config(text=update_btn_text('99')))
 
+icon_replay = PhotoImage(file="/home/miran/Desktop/gomoku/replay.png")
+icon_exit = PhotoImage(file="/home/miran/Desktop/gomoku/logout.png")
 
-
-
-def reset_all():
-    '''for i in range(0, 9):
-        for j in range(0, 9):
-            btn_text[i][j] = '''
-    button00.config(text='hello')
-        
-    
-
-
-
-icon_replay = PhotoImage(file="/home/miran/Desktop/gomuko/replay.png")
-icon_exit = PhotoImage(file="/home/miran/Desktop/gomuko/logout.png")
-
-button_replay = Button(frame, image=icon_replay, command=reset_all())
+button_replay = Button(frame, image=icon_replay, command= lambda: reset_all())
 button_exit = Button(frame,image=icon_exit,command=root.destroy)
 
 
@@ -290,5 +381,117 @@ button99.grid(row =  9, column=9)
 
 button_replay.grid(row = 10, column = 0)
 button_exit.grid(row = 10 , column = 1)
+
+btn_list.append(button00)
+btn_list.append(button01)
+btn_list.append(button02)
+btn_list.append(button03)
+btn_list.append(button04)
+btn_list.append(button05)
+btn_list.append(button06)
+btn_list.append(button07)
+btn_list.append(button08)
+btn_list.append(button09)
+
+btn_list.append(button10)
+btn_list.append(button11)
+btn_list.append(button12)
+btn_list.append(button13)
+btn_list.append(button14)
+btn_list.append(button15)
+btn_list.append(button16)
+btn_list.append(button17)
+btn_list.append(button18)
+btn_list.append(button19)
+
+btn_list.append(button20)
+btn_list.append(button21)
+btn_list.append(button22)
+btn_list.append(button23)
+btn_list.append(button24)
+btn_list.append(button25)
+btn_list.append(button26)
+btn_list.append(button27)
+btn_list.append(button28)
+btn_list.append(button29)
+
+btn_list.append(button30)
+btn_list.append(button31)
+btn_list.append(button32)
+btn_list.append(button33)
+btn_list.append(button34)
+btn_list.append(button35)
+btn_list.append(button36)
+btn_list.append(button37)
+btn_list.append(button38)
+btn_list.append(button39)
+
+btn_list.append(button40)
+btn_list.append(button41)
+btn_list.append(button42)
+btn_list.append(button43)
+btn_list.append(button44)
+btn_list.append(button45)
+btn_list.append(button46)
+btn_list.append(button47)
+btn_list.append(button48)
+btn_list.append(button49)
+
+btn_list.append(button50)
+btn_list.append(button51)
+btn_list.append(button52)
+btn_list.append(button53)
+btn_list.append(button54)
+btn_list.append(button55)
+btn_list.append(button56)
+btn_list.append(button57)
+btn_list.append(button58)
+btn_list.append(button59)
+
+btn_list.append(button60)
+btn_list.append(button61)
+btn_list.append(button62)
+btn_list.append(button63)
+btn_list.append(button64)
+btn_list.append(button65)
+btn_list.append(button66)
+btn_list.append(button67)
+btn_list.append(button68)
+btn_list.append(button69)
+
+btn_list.append(button70)
+btn_list.append(button71)
+btn_list.append(button72)
+btn_list.append(button73)
+btn_list.append(button74)
+btn_list.append(button75)
+btn_list.append(button76)
+btn_list.append(button77)
+btn_list.append(button78)
+btn_list.append(button79)
+
+btn_list.append(button80)
+btn_list.append(button81)
+btn_list.append(button82)
+btn_list.append(button83)
+btn_list.append(button84)
+btn_list.append(button85)
+btn_list.append(button86)
+btn_list.append(button87)
+btn_list.append(button88)
+btn_list.append(button89)
+
+btn_list.append(button90)
+btn_list.append(button91)
+btn_list.append(button92)
+btn_list.append(button93)
+btn_list.append(button94)
+btn_list.append(button95)
+btn_list.append(button96)
+btn_list.append(button97)
+btn_list.append(button98)
+btn_list.append(button99)
+
+
 
 root.mainloop()
