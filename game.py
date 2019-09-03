@@ -1,5 +1,6 @@
 import random
 from tkinter import *
+import os
 from os import system
 from tkinter import messagebox
 from math import inf as infinity
@@ -45,6 +46,7 @@ btn_text = [[ '', '' ,'', '', '', '', '', '', '','' ],
             [ '', '' ,'', '', '', '', '', '', '','' ]]
 
 
+
 def get_branch(i,j):
 
     branch = Branch(False,False,False,False,False,False,False,False)
@@ -59,106 +61,6 @@ def get_branch(i,j):
     if(branch.down == True and branch.right == True):branch.bottom_right = True
     
     return branch
-
-
-def do_five_matches(i,j,branch):
-    
-    print('five match is caled for human player!')
-    ch = btn_text[i][j]
-    current_range = matrix_size
-
-    if(branch.left == True):
-        is_matched = True
-        for x in range(0, current_range):
-            if(btn_text[i][j-x] != ch):
-                is_matched = False
-                return False
-        
-        if(is_matched):
-            show_match_message('five in a row in left!')
-            return True
-    
-             
-    if(branch.right == True):
-        is_matched = True
-        for x in range(0, current_range):
-            if(btn_text[i][j+x] != ch):
-                is_matched = False
-                return False
-
-        if(is_matched):
-            show_match_message('five in a row in left!')
-            return True
-
-
-    if(branch.up == True):
-        is_matched = True
-        for x in range(0, current_range):
-            if(btn_text[i-x][j] != ch):
-                is_matched = False
-                return False
-
-        if(is_matched):
-            show_match_message('five in a row in up!')
-            return True    
-                
-    if(branch.down == True):
-        is_matched = True
-        for x in range(0, current_range):
-            if(btn_text[i+x][j] != ch):
-                is_matched = False
-                return False
-
-        if(is_matched):                
-            show_match_message('five in a row in down!')
-            return True
-
-    if(branch.top_left == True):
-        is_matched = True
-        for x in range(0, current_range):
-            if(btn_text[i-x][j-x] != ch):
-                is_matched = False
-                return False
-
-        if(is_matched):
-            show_match_message('five in a row in top left!')
-            return True
-
-
-    if(branch.top_right == True):
-        is_matched = True
-        for x in range(0, current_range):
-            if(btn_text[i-x][j+x] != ch):
-                is_matched = False
-                return False
-
-        if(is_matched):
-            show_match_message('five in a row in top right!')
-            return True
-
-    if(branch.bottom_left == True):
-        is_matched = True
-        
-        for x in range(0, current_range):
-            if(btn_text[i+x][j-x] != ch):
-                is_matched = False
-                return False
-
-        if(is_matched):
-            show_match_message('five in a row in bottom left!')
-            return True
-
-    if(branch.bottom_right == True):
-        is_matched = True
-        for x in range(0, current_range):
-            if(btn_text[i+x][j+x] != ch):
-                is_matched = False
-                return False
-
-        if(is_matched):
-            show_match_message('five in a row in bottom right!')
-            return True
-
 
 
 def print_branch(i,j,branch):
@@ -176,22 +78,12 @@ def print_branch(i,j,branch):
     print('bottom right: ',branch.bottom_right)
 
 
-def terminal_clear(): 
-    _ = system('clear')
+
+#Every choice and message function here
 
 
-
-def reset_all():
-    print('reset function is callled!')
-   
-    for i in range(0,100):
-        btn_list[i].config(text='')
-
-    for i in range(0,10):
-        for j in range(0,10):
-            btn_text[i][j] = ''
-
-    terminal_clear()
+def show_match_message(message):
+    messagebox.showinfo("Match found", message)
 
 
 
@@ -202,14 +94,24 @@ def want_to_replay():
         reset_all()
     else:
         root.destroy()
-        terminal_clear()
+        cli_clear()
 
 
+def cli_clear(): 
+    os.system('cls' if os.name == 'nt' else 'clear')
+   
 
-def show_match_message(message):
-    messagebox.showinfo("Match found", message)
-    want_to_replay()
+def reset_all():
+    #print('reset function is callled!')
+   
+    for i in range(0,100):
+        btn_list[i].config(text='')
 
+    for i in range(0,10):
+        for j in range(0,10):
+            btn_text[i][j] = ''
+
+    cli_clear()
 
 
 def exit_game():
@@ -218,13 +120,119 @@ def exit_game():
     
     if choice == 'yes':
         root.destroy()
-        terminal_clear()
+        cli_clear()
+
+
+
+#Operational functions are here!
+
+def do_five_matches(i,j,branch):
+    
+    print('five match is caled for human player!')
+    ch = btn_text[i][j]
+    current_range = matrix_size
+
+    if(branch.left == True):
+        is_matched = True
+        for x in range(0, current_range):
+            if(btn_text[i][j-x] != ch):
+                is_matched = False
+                break
+        
+        if(is_matched):
+            show_match_message('five in a row in left!')
+            return True
+    
+             
+    if(branch.right == True):
+        is_matched = True
+        for x in range(0, current_range):
+            if(btn_text[i][j+x] != ch):
+                is_matched = False
+                break
+
+        if(is_matched):
+            show_match_message('five in a row in left!')
+            return True
+
+
+    if(branch.up == True):
+        is_matched = True
+        for x in range(0, current_range):
+            if(btn_text[i-x][j] != ch):
+                is_matched = False
+                break
+
+        if(is_matched):
+            show_match_message('five in a row in up!')
+            return True    
+                
+    if(branch.down == True):
+        is_matched = True
+        for x in range(0, current_range):
+            if(btn_text[i+x][j] != ch):
+                is_matched = False
+                break
+
+        if(is_matched):                
+            show_match_message('five in a row in down!')
+            return True
+
+    if(branch.top_left == True):
+        is_matched = True
+        for x in range(0, current_range):
+            if(btn_text[i-x][j-x] != ch):
+                is_matched = False
+                break
+
+        if(is_matched):
+            show_match_message('five in a row in top left!')
+            return True
+
+
+    if(branch.top_right == True):
+        is_matched = True
+        for x in range(0, current_range):
+            if(btn_text[i-x][j+x] != ch):
+                is_matched = False
+                break
+
+        if(is_matched):
+            show_match_message('five in a row in top right!')
+            return True
+
+    if(branch.bottom_left == True):
+        is_matched = True
+        
+        for x in range(0, current_range):
+            if(btn_text[i+x][j-x] != ch):
+                is_matched = False
+                break
+
+        if(is_matched):
+            show_match_message('five in a row in bottom left!')
+            return True
+
+    if(branch.bottom_right == True):
+        is_matched = True
+        for x in range(0, current_range):
+            if(btn_text[i+x][j+x] != ch):
+                is_matched = False
+                break
+
+        if(is_matched):
+            show_match_message('five in a row in bottom right!')
+            return True
+
+
+
+
 
 
 
 def win_state(state):
     
-    current_range = 3 #no of match needed to win in the game!
+    current_range = matrix_size #no of match needed to win in the game!
     winnable_situation = []
     
     for i in range(0,matrix_size):
@@ -344,37 +352,15 @@ def get_counter():
         return 1     
 
 
-def print_line():
-    
-    for i in range(0,10):
-        print('- ',end='')
-    print('')
-
-
-
-def print_board():
-    
-    for i in range(0,10):
-        print_line()
-        for j in range(0,10):
-            ch = btn_text[i][j]
-            if(ch!=''):
-                print(ch, end='')
-            else:
-                print(' ', end='')
-        print('')
-
-
-
 def get_empty_index(state):
     
-    empty_cell_list = []
+    empty_index_list = []
     for i in range(0,matrix_size):
         for j in range(0,matrix_size):
             if(state[i][j]==''):
-                empty_cell_list.append([i,j])
+                empty_index_list.append([i,j])
     
-    return empty_cell_list
+    return empty_index_list
 
 
 
@@ -403,20 +389,20 @@ def minimax(state, depth, player):
         winner_score = who_won(state,player)
         return [-1, -1, winner_score]
 
-    for cell in get_empty_index(state):
-        x, y = cell[0], cell[1]
+    for index in get_empty_index(state):
+        i = index[0]
+        j = index[1]
         
         if(player == 1):
-            state[x][y] = '*'
+            state[i][j] = '*'
         else:
-            state[x][y] = 'o'
-
-        
+            state[i][j] = 'o'
+            
         score = minimax(state, depth - 1, -player)
         
-        state[x][y] = ''
-        score[0] = x
-        score[1] = y
+        state[i][j] = ''
+        score[0] = i
+        score[1] = j
 
         #print('score type:',type(score[2]))
         #print('best type',type(best[2]))
@@ -436,13 +422,12 @@ def minimax(state, depth, player):
 def get_computer_move(state):
   
     #print("computer move called")
+    empty_index_list = get_empty_index(state)
+    depth = len(empty_index_list)
     
-    empty_cell_list = get_empty_index(state)
-    print(len(state)*len(state[0]))
-    
-    depth = len(empty_cell_list)
-    print(depth)
-    print(empty_cell_list)
+    #print(len(state)*len(state[0]))
+    #print(depth)
+    print(empty_index_list)
 
 
     if(depth == 0):
@@ -460,8 +445,7 @@ def get_computer_move(state):
         state[i][j] = 'o'
             
     btn_list[i*10+j].config(text=state[i][j])
-    
-    check_match(i,j)
+    return check_match(i,j)
     
     
 
@@ -477,10 +461,15 @@ def update_btn_text(index):
         else:
             btn_text[i][j] = 'o'
 
+        #btn_list[i*10+j].config(text=btn_text[i][j])
         is_game_over = check_match(i,j)
-
-        if(is_game_over == False):
-            get_computer_move(btn_text)
+        
+        if(is_game_over == True):
+            want_to_replay()
+        else:
+            if(get_computer_move(btn_text) == True):
+                show_match_message("Computer won, Shame !")
+                want_to_replay()
 
         return btn_text[i][j]
     else:
@@ -832,7 +821,7 @@ def create_board():
 
 
 def main():
-    print(len(btn_text)*len(btn_text[0]))
+    #print(len(btn_text)*len(btn_text[0]))
     create_board()
     
 
